@@ -1,5 +1,6 @@
 extern crate proc_macro;
 use std::collections::HashMap;
+use std::time::SystemTime;
 use quote::__private::TokenStream as TokenStream2;
 use quote::{format_ident, quote};
 use proc_macro::{TokenStream};
@@ -58,7 +59,7 @@ pub fn create_config(input: TokenStream) -> TokenStream {
                                 let name = format_ident!("{}",name);
                                 quote!(#name: #val)
                             });
-    
+
                             let struc = quote!(
                                 #[derive(Deserialize,Debug)]
                                 pub struct #s_name_ident{
@@ -67,7 +68,7 @@ pub fn create_config(input: TokenStream) -> TokenStream {
                             );
                             structs.push(struc);
                         }
-                     
+
                         quote!(#s_name_ident)
                     }else{
                         if let Some(val) = same_type{
@@ -76,7 +77,7 @@ pub fn create_config(input: TokenStream) -> TokenStream {
                         }else{
                             panic!("HashMap {name} has multiple value types");
                         }
-                   
+
                     }
                 },
             }
@@ -111,4 +112,12 @@ fn camel_to_snake_case(input: &str) -> String {
     }
 
     output
+}
+
+
+#[proc_macro]
+pub fn compile_time(input: TokenStream) -> TokenStream{
+    let local_time = chrono::Local::now();
+    let formatted = format!("{}", local_time.format("%d.%m.%Y - %H:%M:%S"));
+    quote!(#formatted).into()
 }

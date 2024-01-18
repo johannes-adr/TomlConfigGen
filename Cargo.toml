@@ -12,3 +12,4 @@ proc-macro = true
 quote = "1.0.35"
 syn = "2.0.48"
 toml = "0.8.8"
+chrono = "0.4"
